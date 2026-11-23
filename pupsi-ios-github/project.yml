@@ -1,0 +1,38 @@
+name: PupsiChess
+options:
+  bundleIdPrefix: com.static.pupsi
+  deploymentTarget:
+    iOS: "16.4"
+  groupSortPosition: top
+
+targets:
+  PupsiChess:
+    type: application
+    platform: iOS
+    sources:
+      - path: app/PupsiChess/PupsiChessApp.swift
+      - path: app/PupsiChess/ContentView.swift
+      - path: app/PupsiChess/WebViewHost.swift
+      - path: app/PupsiChess/PupsiSchemeHandler.swift
+      - path: app/PupsiChess/Resources
+        type: folder
+    info:
+      properties:
+        CFBundleDisplayName: Pupsi Chess
+        CFBundleName: PupsiChess
+        UILaunchScreen: {}
+        UIRequiredDeviceCapabilities: [arm64]
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: false
+        ITSAppUsesNonExemptEncryption: false
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.static.pupsi.chess
+      SWIFT_VERSION: "5.9"
+      TARGETED_DEVICE_FAMILY: "1,2"
+      CODE_SIGN_STYLE: Automatic
+      IPHONEOS_DEPLOYMENT_TARGET: "16.4"
+      ENABLE_BITCODE: NO
