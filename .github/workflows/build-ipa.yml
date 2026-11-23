@@ -1,0 +1,50 @@
+name: Build Pupsi IPA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Sync engine and generate Xcode project
+        run: |
+          [ -d pupsi-ios ] && cd pupsi-ios
+          chmod +x sync.sh
+          ./sync.sh
+          xcodegen generate --spec project.yml
+
+      - name: Build unsigned app
+        run: |
+          [ -d pupsi-ios ] && cd pupsi-ios
+          xcodebuild \
+            -project PupsiChess.xcodeproj \
+            -scheme PupsiChess \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            -quiet \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES=YES \
+            build
+
+      - name: Package IPA
+        run: |
+          [ -d pupsi-ios ] && cd pupsi-ios
+          mkdir -p Payload
+          cp -R build/Build/Products/Release-iphoneos/PupsiChess.app Payload/
+          zip -qry PupsiChess.ipa Payload
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: PupsiChess-ipa
+          path: "**/PupsiChess.ipa"
+          if-no-files-found: error
